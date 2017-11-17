@@ -15,7 +15,6 @@ type ZhimaCreditScoreGetRequest struct {
 func (m *ZhimaCreditScoreGetRequest) InitBizParams(openId, productCode, transactionId string) {
 	m.BizParams = make(map[string]string)
 	m.FileParams = make(map[string]string)
-	m.Platform = "zmop"
 	m.BizParams["open_id"] = openId
 	m.OpenId = openId
 	m.BizParams["product_code"] = productCode
