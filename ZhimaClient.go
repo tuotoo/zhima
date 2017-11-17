@@ -9,7 +9,7 @@ import (
 )
 
 type ZhimaClient struct {
-	Appid string
+	AppId string
 
 	bizPrivateKey  []byte
 	zhimaPublicKey []byte
@@ -96,7 +96,7 @@ func (m *ZhimaClient) GetSystemParams(request *interfaces.ZhimaRequest) *map[str
 
 	//TODO: make it struct
 
-	sysParams["app_id"] = m.Appid
+	sysParams["app_id"] = m.AppId
 	sysParams["version"] = version
 	sysParams["method"] = (*request).GetApiMethodName()
 	sysParams["charset"] = m.Charset
@@ -109,7 +109,7 @@ func (m *ZhimaClient) GetSystemParams(request *interfaces.ZhimaRequest) *map[str
 
 func NewZhimaClient(gatewayUrl, appId, charset, bizPrivateKeyPath, zhimaPublicKeyPath string) (*ZhimaClient, error) {
 	client := &ZhimaClient{
-		Appid:      appId,
+		AppId:      appId,
 		GatewayUrl: gatewayUrl,
 		Format:     "json",
 		ApiVersion: "1.0",
