@@ -81,7 +81,7 @@ func (m *ZhimaClient) Execute(request interfaces.ZhimaRequest) (string, error) {
 }
 
 func (m *ZhimaClient) GetBizParamStr(request *interfaces.ZhimaRequest) string {
-	return utils.BuildQueryString((*request).GetBizParams(), true)
+	return utils.BuildQueryString((*request).GetApiParams(), true)
 }
 
 func (m *ZhimaClient) GetSystemParams(request *interfaces.ZhimaRequest) *map[string]string {

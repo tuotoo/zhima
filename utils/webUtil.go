@@ -19,9 +19,9 @@ func IsEmpty(str string) bool {
 	return len(strings.TrimSpace(str)) == 0
 }
 
-func BuildQueryString(params map[string]string, needEncode bool) string {
+func BuildQueryString(params *map[string]string, needEncode bool) string {
 	paramsList := []string{}
-	for key, value := range params {
+	for key, value := range (*params) {
 		if !IsEmpty(value) {
 			if needEncode {
 				paramsList = append(paramsList, key+"="+url.QueryEscape(value))
@@ -44,8 +44,8 @@ func PostRequest(url string, request *interfaces.ZhimaRequest, httpParams *map[s
 
 	// Put files into post form (if exist)
 	files := (*request).GetFileParams()
-	if len(files) > 0 {
-		for key, value := range files {
+	if len(*files) > 0 {
+		for key, value := range *files {
 			part, err := writer.CreateFormFile(key, path.Base(value))
 			if err != nil {
 				return nil, err
