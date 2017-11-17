@@ -26,22 +26,22 @@ go get http://github.com/delostik/go-zmxy
 
 
 ### 目前支持请求列表：
-芝麻分
-ZhimaCreditScoreGetRequest
-ZhimaCreditScoreBriefGetRequest
-ZhimaCreditScoreCobuildGetRequest
-ZhimaCreditScoreIndustryGetRequest
-
-认证和授权
-ZhimaAuthEngineMultiauthRequest
-ZhimaAuthEngineOrganizationauthRequest
-ZhimaAuthEngineProtocolRequest
-ZhimaAuthEngineSmsauthRequest
-ZhimaAuthFaceInitRequest
-ZhimaAuthFaceVerifyRequest
-ZhimaAuthInfoAuthorizeRequest
-ZhimaAuthInfoAuthqueryRequest
-ZhimaAuthInfoFreezeRequest
-ZhimaAuthZhimaCustCertifyInitialRequest
-
-SsdataFindataCommonJumpurlQueryRequest
+芝麻分  
+ZhimaCreditScoreGetRequest  
+ZhimaCreditScoreBriefGetRequest  
+ZhimaCreditScoreCobuildGetRequest  
+ZhimaCreditScoreIndustryGetRequest  
+  
+认证和授权  
+ZhimaAuthEngineMultiauthRequest  
+ZhimaAuthEngineOrganizationauthRequest  
+ZhimaAuthEngineProtocolRequest  
+ZhimaAuthEngineSmsauthRequest  
+ZhimaAuthFaceInitRequest  
+ZhimaAuthFaceVerifyRequest  
+ZhimaAuthInfoAuthorizeRequest  
+ZhimaAuthInfoAuthqueryRequest  
+ZhimaAuthInfoFreezeRequest  
+ZhimaAuthZhimaCustCertifyInitialRequest  
+  
+SsdataFindataCommonJumpurlQueryRequest  
