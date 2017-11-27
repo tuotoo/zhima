@@ -12,12 +12,28 @@ func DecryptRSA(data string, privateKeyStr []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	private, err := x509.ParsePKCS8PrivateKey(privateKeyStr)
+	privateKey, err := x509.ParsePKCS1PrivateKey(privateKeyStr)
 	if err != nil {
 		return "", err
 	}
-	privateKey := private.(*rsa.PrivateKey)
-	decrypted, err := rsa.DecryptPKCS1v15(rand.Reader, privateKey, cipherText)
+
+	k := (privateKey.N.BitLen() + 7) / 8
+	decrypted := make([]byte, 0, len(cipherText))
+	for i := 0; i < len(cipherText); i += k {
+		if i+k < len(cipherText) {
+			partial, err1 := rsa.DecryptPKCS1v15(rand.Reader, privateKey, cipherText[i:i+k])
+			if err1 != nil {
+				return "", err
+			}
+			decrypted = append(decrypted, partial...)
+		} else {
+			partial, err1 := rsa.DecryptPKCS1v15(rand.Reader, privateKey, cipherText[i:])
+			if err1 != nil {
+				return "", err
+			}
+			decrypted = append(decrypted, partial...)
+		}
+	}
 
 	return string(decrypted), err
 }
