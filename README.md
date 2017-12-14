@@ -6,13 +6,13 @@ zmxy(芝麻信用) SDK for golang
 
 ### 安装
 ```
-go get http://github.com/delostik/go-zmxy
+go get http://github.com/tuotoo/zhima
 ```
 
 ### 使用
 ```
     // 初始化
-    gateWay := "https://zmopenapi.zmxy.com.cn/sandbox.do"
+    gateWay := "https://zmopenapi.zmxy.com.cn/openapi.do"
     client, err := zmxy.NewZhimaClient(gateWay, appId, charset, privKeyPath, pubKeyPath)
     // do something
     ...

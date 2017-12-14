@@ -1,11 +1,13 @@
-package go_zmxy
+package zhima
 
 import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"github.com/delostik/go-zmxy/interfaces"
-	"github.com/delostik/go-zmxy/utils"
+	"fmt"
+	"github.com/tuotoo/zhima/interfaces"
+	"github.com/tuotoo/zhima/utils"
+	"net/url"
 )
 
 type ZhimaClient struct {
@@ -35,26 +37,49 @@ func (m *ZhimaClient) InitPemKey(bizPrivateKeyPath, zhimaPublicKeyPath string) e
 	return nil
 }
 
-func (m *ZhimaClient) Execute(request interfaces.ZhimaRequest) (string, error) {
-	bizParamStr := m.GetBizParamStr(&request)
-	httpParams := m.GetSystemParams(&request)
+func (m *ZhimaClient) GeneratePageRedirectInvokeUrl(request interfaces.ZhimaRequest) (string, error) {
+	bizParamStr := m.GetBizParamStr(request)
+	httpParams := m.GetSystemParams(request)
 
 	enBizParam, err := utils.EncryptRSA([]byte(bizParamStr), m.zhimaPublicKey)
 	if err != nil {
 		return "", err
 	}
-	(*httpParams)["params"] = base64.StdEncoding.EncodeToString(enBizParam)
+	httpParams["params"] = base64.StdEncoding.EncodeToString(enBizParam)
 
 	sign, err := utils.Sign(bizParamStr, m.bizPrivateKey)
 	if err != nil {
 		return "", err
 
 	}
-	(*httpParams)["sign"] = sign
+	httpParams["sign"] = sign
+	urlvalue := url.Values{}
+	for key, value := range httpParams {
+		urlvalue.Add(key, value)
+	}
+	return fmt.Sprintf("%s?%s", m.GatewayUrl, urlvalue.Encode()), nil
+}
 
-	respData, err := utils.PostRequest(m.GatewayUrl, &request, httpParams)
+func (m *ZhimaClient) Execute(request interfaces.ZhimaRequest) (string, error) {
+	bizParamStr := m.GetBizParamStr(request)
+	httpParams := m.GetSystemParams(request)
+
+	enBizParam, err := utils.EncryptRSA([]byte(bizParamStr), m.zhimaPublicKey)
 	if err != nil {
-		return "", nil
+		return "", err
+	}
+	httpParams["params"] = base64.StdEncoding.EncodeToString(enBizParam)
+
+	sign, err := utils.Sign(bizParamStr, m.bizPrivateKey)
+	if err != nil {
+		return "", err
+
+	}
+	httpParams["sign"] = sign
+
+	respData, err := utils.PostRequest(m.GatewayUrl, &request, &httpParams)
+	if err != nil {
+		return "", err
 	}
 
 	// Decrypt if needed
@@ -80,15 +105,15 @@ func (m *ZhimaClient) Execute(request interfaces.ZhimaRequest) (string, error) {
 	return respData.Data, nil
 }
 
-func (m *ZhimaClient) GetBizParamStr(request *interfaces.ZhimaRequest) string {
-	return utils.BuildQueryString((*request).GetApiParams(), true)
+func (m *ZhimaClient) GetBizParamStr(request interfaces.ZhimaRequest) string {
+	return utils.BuildQueryString(request.GetApiParams(), true)
 }
 
-func (m *ZhimaClient) GetSystemParams(request *interfaces.ZhimaRequest) *map[string]string {
+func (m *ZhimaClient) GetSystemParams(request interfaces.ZhimaRequest) map[string]string {
 	if m.Charset == "" {
 		m.Charset = "UTF-8"
 	}
-	version := (*request).GetApiVersion()
+	version := request.GetApiVersion()
 	if version == "" {
 		version = m.ApiVersion
 	}
@@ -98,13 +123,13 @@ func (m *ZhimaClient) GetSystemParams(request *interfaces.ZhimaRequest) *map[str
 
 	sysParams["app_id"] = m.AppId
 	sysParams["version"] = version
-	sysParams["method"] = (*request).GetApiMethodName()
+	sysParams["method"] = request.GetApiMethodName()
 	sysParams["charset"] = m.Charset
-	sysParams["scene"] = (*request).GetScene()
-	sysParams["channel"] = (*request).GetChannel()
-	sysParams["platform"] = (*request).GetPlatform()
-	sysParams["ext_params"] = (*request).GetExtParams()
-	return &sysParams
+	sysParams["scene"] = request.GetScene()
+	sysParams["channel"] = request.GetChannel()
+	sysParams["platform"] = request.GetPlatform()
+	sysParams["ext_params"] = request.GetExtParams()
+	return sysParams
 }
 
 func NewZhimaClient(gatewayUrl, appId, charset, bizPrivateKeyPath, zhimaPublicKeyPath string) (*ZhimaClient, error) {

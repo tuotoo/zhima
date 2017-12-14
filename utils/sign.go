@@ -8,11 +8,10 @@ import (
 )
 
 func Sign(params string, privateKeyStr []byte) (string, error) {
-	privateInterface, err := x509.ParsePKCS8PrivateKey(privateKeyStr)
+	privateKey, err := x509.ParsePKCS1PrivateKey(privateKeyStr)
 	if err != nil {
 		return "", err
 	}
-	privateKey, _ := privateInterface.(*rsa.PrivateKey)
 	result, err := RsaSign(params, privateKey)
 	if err != nil {
 		return "", err

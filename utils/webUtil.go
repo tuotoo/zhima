@@ -3,8 +3,8 @@ package utils
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/delostik/go-zmxy/dto"
-	"github.com/delostik/go-zmxy/interfaces"
+	"github.com/tuotoo/zhima/dto"
+	"github.com/tuotoo/zhima/interfaces"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -21,7 +21,7 @@ func IsEmpty(str string) bool {
 
 func BuildQueryString(params *map[string]string, needEncode bool) string {
 	paramsList := []string{}
-	for key, value := range (*params) {
+	for key, value := range *params {
 		if !IsEmpty(value) {
 			if needEncode {
 				paramsList = append(paramsList, key+"="+url.QueryEscape(value))

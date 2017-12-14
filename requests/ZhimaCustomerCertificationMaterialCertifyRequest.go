@@ -1,7 +1,7 @@
 package requests
 
 import (
-	"github.com/delostik/go-zmxy/interfaces"
+	"github.com/tuotoo/zhima/interfaces"
 )
 
 type ZhimaCustomerCertificationMaterialCertifyRequest struct {
