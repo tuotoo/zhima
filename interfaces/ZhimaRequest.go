@@ -14,7 +14,6 @@ type ZhimaRequest interface {
 	GetPlatform() string
 	SetExtParams(string)
 	GetExtParams() string
-
 }
 
 type ZhimaRequestParams struct {
