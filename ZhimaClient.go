@@ -141,11 +141,14 @@ func (m *ZhimaClient) GetSystemParams(request interfaces.ZhimaRequest) map[strin
 //:param sign: 返回值中的签名串
 //:return str: 解密后的明文
 func (m *ZhimaClient) DecryptAndVerifySign(encryptedResponse, sign string) (string,error) {
-	pass := utils.VerifySign(encryptedResponse,sign,m.bizPrivateKey)
+	resp,err := utils.DecryptRSA(encryptedResponse,m.bizPrivateKey)
+	if err != nil{
+		return "",err
+	}
+	pass := utils.VerifySign(resp,sign,m.zhimaPublicKey)
 	if !pass {
 		return "",errors.New("签名验证失败")
 	}
-	resp,err := utils.DecryptRSA(encryptedResponse,m.bizPrivateKey)
 	return resp,err
 }
 
