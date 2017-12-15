@@ -132,6 +132,23 @@ func (m *ZhimaClient) GetSystemParams(request interfaces.ZhimaRequest) map[strin
 	return sysParams
 }
 
+
+//解密验签
+//1.先解密，再验签
+//2.如果验签成功，则返回解密后的值
+//3.如果验签失败，则抛出异常
+//:param encryptedResponse: 返回值中的加密串
+//:param sign: 返回值中的签名串
+//:return str: 解密后的明文
+func (m *ZhimaClient) DecryptAndVerifySign(encryptedResponse, sign string) (string,error) {
+	pass := utils.VerifySign(encryptedResponse,sign,m.bizPrivateKey)
+	if !pass {
+		return "",errors.New("签名验证失败")
+	}
+	resp,err := utils.DecryptRSA(encryptedResponse,m.bizPrivateKey)
+	return resp,err
+}
+
 func NewZhimaClient(gatewayUrl, appId, charset, bizPrivateKeyPath, zhimaPublicKeyPath string) (*ZhimaClient, error) {
 	client := &ZhimaClient{
 		AppId:      appId,
